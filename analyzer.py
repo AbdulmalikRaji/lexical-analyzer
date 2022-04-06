@@ -1,4 +1,11 @@
-import re;
+import re
+import os
+
+
+# The following are regex rules. They are regular expressions for regular grammars
+# The rules are declared in order of precedence. 
+
+# for example ("if", "while", "for") have to come first since they can be considered as identities otherwise
 rules = {
     "IF_TOKEN": "^if$",
     "WHILE_TOKEN": "^while$",
@@ -9,23 +16,53 @@ rules = {
     "RELOP": "^((>|<|=)=|(>|<))$",
 }
 
+# Symbol table to store non-ERRORED lexemes
+symbol_table = []
 
-symbol_table = dict()
-
+# A function to check which token a word belongs to
 def lex(word):
+    # Looping the the rules
     for token,expression in rules.items():
+        # We check if the string matches the expression we return the token
         regex = re.compile(expression)
         if regex.match(word):
             return token
+        
+    # If no string matches any 
     return "ERROR"
 
-    
+
+def print_table(table):
+    html = open("table.html", 'w')
+    lines = ["<html>",'<head><link rel="stylesheet" href="style.css"></head>',"<body>"]
+    lines.append('<div class="table-wrapper"><table class="fl-table"><tr><th>Lexeme</th><th>Token</th></tr>')
+    for row in table:
+        token,lexeme = row
+        lines.append("<tr>")
+        lines.append("<td>"+'"'+lexeme+'"'+"</td>"+ "<td>"+token+"</td>")
+        lines.append("</tr>")
+    lines.append("</table></div>")
+    lines.append("</body></html>")
+    html.writelines(lines)
+    html.close()
+    os.startfile("table.html");
+        
 def analyze():
+    # Reinitialize symbol table in case of changes in input
+    symbol_table.clear()
+    
+    # input.dat contains our words/lexemes
     file = open("input.dat",'r')
     for line in file.readlines():
         for lexeme in line.split(" "):
-            print("Token:",lex(lexeme))
+            # Here we print the token and its lexeme
+            token = lex(lexeme)
+            print("Token:",token)
             print("Lexeme:",lexeme, end="\n\n")
+            if token != "ERROR":
+                symbol_table.append([token,lexeme])
     file.close()
     
 analyze()
+print(symbol_table)
+print_table(symbol_table)

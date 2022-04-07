@@ -62,7 +62,19 @@ def analyze():
             if token != "ERROR":
                 symbol_table.append([token,lexeme])
     file.close()
-    
-analyze()
-print(symbol_table)
-print_table(symbol_table)
+
+i = "0"
+while i != "3":
+    print("1.) Call lex \n")
+    print("2.) Show symbol table \n")
+    print("3.) Exit \n")
+    i = input("Enter a digit: ")
+    if i == "1":
+        analyze()
+    elif i == "2":
+        print(symbol_table)
+        print_table(symbol_table)
+    else:
+        print("Enter a correct digit this time \n")    
+
+print("GOODBYE!")
